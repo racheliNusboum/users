@@ -1,4 +1,4 @@
-
+const errorTypes={VALIDATION:422} 
 let users=[]
 let id=1
 class User{
@@ -26,8 +26,6 @@ const existUser = async (userName) => {
 }
 
 const createUser = async (user) => {
-    const errorTypes={VALIDATION:422} 
-     console.log(users);
     if (await existUser(user.name)) {
         const error = {
             message: `userName '${user.name}' is not available`,
@@ -59,7 +57,7 @@ const updateUser = async (id,user) => {
                     }
             return item;
     } )
-    console.log(users)
+   
     return user
 }
 
@@ -79,7 +77,7 @@ else{
 
    
     const deleteUser = async (id) =>{
-        const errorTypes={VALIDATION:422} 
+      
         try {
                 const tempArray= users.filter(item => item.id !== parseInt(id));
                 if(tempArray.length!=users.length){
