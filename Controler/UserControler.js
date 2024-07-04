@@ -1,6 +1,9 @@
 const { createUser, deleteUser, updateUser } = require('../modules/user');
 const createNewUser =async(req, res) => {
     try {
+       if(req.body.phone===undefined||req.body.name===undefined||req.body.email===undefined){
+        return res.status(400).json({ errors: [{ msg: 'Please fill in all the required fields' }] });
+       }
         const newUser = await createUser(req.body)
         res.status(201).json(newUser)
     }
@@ -34,6 +37,9 @@ const deleteUserByID = async(req, res) => {
 }
 const updateUserById =  async(req, res) => {
     try {
+        if(req.body.phone===undefined||req.body.name===undefined||req.body.email===undefined){
+            return res.status(400).json({ errors: [{ msg: 'Please fill in all the required fields' }] });
+           }
         const { userId } = req.params;
         const user = req.body;
         const userUpdated =await  updateUser(userId, user)
