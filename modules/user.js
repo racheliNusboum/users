@@ -1,32 +1,32 @@
 
-let users=[]
-const {v4}  = require('uuid')
-class User{
+let users = []
+let idUser = 1
+const errorTypes = { VALIDATION: 422 }
 
-    constructor(name,email,phone) {
-        const id = v4()
-        this.id = id
+class User {
+
+    constructor(name, email, phone) {
+
+        this.id = idUser++
         this.name = name
         this.email = email
         this.phone = phone
     }
 
 }
-
-
-
-const existUser = async (userName) => {    
+const existUser = async (userName) => {
     try {
-        const response = await users.find((element)=>element===userName)
-        return response.length>0
-    } 
+        let response = await users.find((element) => element.name === userName)
+        return response === undefined ? false : true
+    }
     catch (error) {
         throw error
     }
 }
-
 const createUser = async (user) => {
+
     if (await existUser(user.name)) {
+
         const error = {
             message: `userName '${user.name}' is not available`,
             type: errorTypes.VALIDATION
@@ -34,7 +34,13 @@ const createUser = async (user) => {
         throw error
     }
     try {
-        users.push(new User(user.name,user.email,user.phone));
+        const newUser = new User(user.name, user.email, user.phone)
+        if (users.length === 0) {
+            users = [newUser]
+        }
+        else {
+            users.push(newUser);
+        }
         return user
     }
     catch (error) {
@@ -42,54 +48,48 @@ const createUser = async (user) => {
     }
 }
 
-
-const upDate = async (id,user) => {    
+const upDateUser = async (id, user) => {
     try {
-    
         if (await existUser(user.name)) {
-                users = array.map(item => {
-                    if (item.id === id) {
-                        return { ...item, name: user.name,email:user.email,phone:user.phone};
-                        
-                    }
-            return item;
-    } )
-}
-else{
-    const error = {
-        message: `userName '${user.name}' is not available`,
-        type: errorTypes.VALIDATION
+            users = users.map(item => {
+                if (item.id === parseInt(id)) {
+                    return { ...item, name: user.name, email: user.email, phone: user.phone };
+
+                }
+                return item;
+            })
+            return user
+        }
+        else {
+            const error = {
+                message: `userName '${user.name}' is not available`,
+                type: errorTypes.VALIDATION
+            }
+            throw error
+        }
     }
-    throw error
-}
-}
     catch (error) {
         throw error
+    }
+}
+const deleteUser = async (id) => {
+    try {
+        const tempArray = users.filter(item => item.id !== parseInt(id));
+        if (tempArray.length != users.length) {
+            users = tempArray
+        }
+        else {
+            const error = {
+                message: `id '${id}' is not available`,
+                type: errorTypes.VALIDATION
+            }
+            throw error
         }
     }
-
-
-   
-    const deleteUser = async (id) =>{
-
-        try {
-                const tempArray= array.filter(item => item.id !== id);
-                if(tempArray.length!=users.length){
-                   users=tempArray
-                }     
-    else{
-        const error = {
-            message: `userName '${user.name}' is not available`,
-            type: errorTypes.VALIDATION
-        }
+    catch (error) {
         throw error
     }
-    }
-        catch (error) {
-            throw error
-            }
-        }
-    module.exports = {
-        deleteUser,upDate,createUser,existUser
-    }
-    
+}
+module.exports = {
+    deleteUser, upDateUser, createUser
+}
