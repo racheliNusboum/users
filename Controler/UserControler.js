@@ -1,15 +1,22 @@
 const { createUser, deleteUser, updateUser } = require('../modules/user');
-const createNewUser =async(req, res) => {
+const validator = require('validator');
+
+const createNewUser = async (req, res) => {
     try {
-        const newUser = await createUser(req.body)
-        res.status(201).json(newUser)
-    }
-    catch (error) {
-        console.log({ error });
-        if (error.type) {
-            res.status(error.type).send(error.message)
+        const { email } = req.body;
+
+        if (!email || !validator.isEmail(email) || email.includes(' ')) {
+            return res.status(400).send('Invalid email format');
         }
-        else {
+        
+        const newUser = await createUser(req.body);
+        res.status(201).json(newUser);
+    } catch (error) {
+        console.log({ error });
+        
+        if (error.type) {
+            res.status(error.type).send(error.message);
+        } else {
             res.status(500).send(error.message);
         }
     }
