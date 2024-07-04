@@ -17,7 +17,7 @@ const createNewUser = async (req, res) => {
 }
 const deleteUserByID = async (req, res) => {
     try {
-        const { userId } = req.params.userId;
+        const { userId } = req.params;
         await deleteUser(userId)
         res.status(200).send(`User with ID ${userId} has been deleted`)
 

@@ -2,13 +2,12 @@
 let users = []
 let idUser = 1
 const errorTypes = { VALIDATION: 422 }
-const { v4 } = require('uuid')
+
 class User {
 
     constructor(name, email, phone) {
 
         this.id = idUser++
-        console.log(this.id)
         this.name = name
         this.email = email
         this.phone = phone
@@ -42,7 +41,6 @@ const createUser = async (user) => {
         else {
             users.push(newUser);
         }
-        console.log({ users })
         return user
     }
     catch (error) {
@@ -60,7 +58,6 @@ const upDateUser = async (id, user) => {
                 }
                 return item;
             })
-            console.log({ users })
             return user
         }
         else {
@@ -75,19 +72,15 @@ const upDateUser = async (id, user) => {
         throw error
     }
 }
-
-
-
 const deleteUser = async (id) => {
-
     try {
-        const tempArray = array.filter(item => item.id !== id);
+        const tempArray = users.filter(item => item.id !== parseInt(id));
         if (tempArray.length != users.length) {
             users = tempArray
         }
         else {
             const error = {
-                message: `userName '${user.name}' is not available`,
+                message: `id '${id}' is not available`,
                 type: errorTypes.VALIDATION
             }
             throw error
