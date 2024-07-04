@@ -1,6 +1,7 @@
 
 let users=[]
 let id=1
+const errorTypes={VALIDATION:404} 
 class User{
     constructor(name,email,phone){
         this.id = id++
@@ -26,7 +27,8 @@ const existUser = async (userName) => {
 }
 
 const createUser = async (user) => {
-    const errorTypes={VALIDATION:422} 
+   
+ 
      console.log(users);
     if (await existUser(user.name)) {
         const error = {
