@@ -1,10 +1,8 @@
 
 let users=[]
-// const {v4}  = require('uuid')
 let id=1
 class User{
     constructor(name,email,phone){
-        // const id = v4()
         this.id = id++
         this.name = name
         this.email = email
@@ -81,15 +79,15 @@ else{
 
    
     const deleteUser = async (id) =>{
-
+        const errorTypes={VALIDATION:422} 
         try {
-                const tempArray= array.filter(item => item.id !== id);
+                const tempArray= users.filter(item => item.id !== parseInt(id));
                 if(tempArray.length!=users.length){
                    users=tempArray
                 }     
     else{
         const error = {
-            message: `userName '${user.name}' is not available`,
+            message: `userName '${id}' is not available`,
             type: errorTypes.VALIDATION
         }
         throw error
