@@ -1,12 +1,7 @@
-// const express = require('express');
-// const router = express.Router()
-// const { User } = require('../module/users')
-const { createUser, deleteUser, updateUser } = require('../module/users');
-const createNewUser =(req, res) => {
+const { createUser, deleteUser, updateUser } = require('../modules/user');
+const createNewUser =async(req, res) => {
     try {
-        // const user = new User(req.body.name,req.body.email,req.body.phone)
-        // const user=req.body;
-        const newUser =  createUser(req.body)
+        const newUser = await createUser(req.body)
         res.status(201).json(newUser)
     }
     catch (error) {
@@ -20,10 +15,10 @@ const createNewUser =(req, res) => {
     }
 }
 
-const deleteUserByID = (req, res) => {
+const deleteUserByID = async(req, res) => {
     try {
-        const { userId } = req.params.userId;
-        deleteUser(userId)
+        const { userId } = req.params;
+       await deleteUser(userId)
         res.status(200).send(`User with ID ${userId} has been deleted`)
 
     }
@@ -37,12 +32,13 @@ const deleteUserByID = (req, res) => {
         }
     }
 }
-const updateUserById =  (req, res) => {
+const updateUserById =  async(req, res) => {
     try {
         const { userId } = req.params;
         const user = req.body;
-        const userUpdated =  updateUser(userId, user)
+        const userUpdated =await  updateUser(userId, user)
         res.status(201).json(userUpdated)
+        
     }
     catch (error) {
         console.log({ error });

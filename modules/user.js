@@ -1,11 +1,9 @@
 
 let users=[]
-const {v4}  = require('uuid')
+let id=1
 class User{
-
-    constructor(name,email,phone) {
-        const id = v4()
-        this.id = id
+    constructor(name,email,phone){
+        this.id = id++
         this.name = name
         this.email = email
         this.phone = phone
@@ -17,8 +15,10 @@ class User{
 
 const existUser = async (userName) => {    
     try {
-        const response = await users.find((element)=>element===userName)
-        return response.length>0
+        let response = await users.find((element)=>element.name===userName)
+        
+            
+        return response===undefined?false:true
     } 
     catch (error) {
         throw error
@@ -26,6 +26,8 @@ const existUser = async (userName) => {
 }
 
 const createUser = async (user) => {
+    const errorTypes={VALIDATION:422} 
+     console.log(users);
     if (await existUser(user.name)) {
         const error = {
             message: `userName '${user.name}' is not available`,
@@ -34,7 +36,10 @@ const createUser = async (user) => {
         throw error
     }
     try {
-        users.push(new User(user.name,user.email,user.phone));
+        if(users.length===0)
+            users=[new User(user.name,user.email,user.phone)]
+        else
+            users.push(new User(user.name,user.email,user.phone));
         return user
     }
     catch (error) {
@@ -43,18 +48,21 @@ const createUser = async (user) => {
 }
 
 
-const upDate = async (id,user) => {    
+const updateUser = async (id,user) => {    
     try {
     
         if (await existUser(user.name)) {
-                users = array.map(item => {
-                    if (item.id === id) {
+                users = users.map(item => {
+                    if (item.id === parseInt(id)) {
                         return { ...item, name: user.name,email:user.email,phone:user.phone};
-                        
+                       
                     }
             return item;
     } )
+    console.log(users)
+    return user
 }
+
 else{
     const error = {
         message: `userName '${user.name}' is not available`,
@@ -71,15 +79,15 @@ else{
 
    
     const deleteUser = async (id) =>{
-
+        const errorTypes={VALIDATION:422} 
         try {
-                const tempArray= array.filter(item => item.id !== id);
+                const tempArray= users.filter(item => item.id !== parseInt(id));
                 if(tempArray.length!=users.length){
                    users=tempArray
                 }     
     else{
         const error = {
-            message: `userName '${user.name}' is not available`,
+            message: `userName '${id}' is not available`,
             type: errorTypes.VALIDATION
         }
         throw error
@@ -90,6 +98,6 @@ else{
             }
         }
     module.exports = {
-        deleteUser,upDate,createUser,existUser
+        deleteUser,updateUser,createUser
     }
     
